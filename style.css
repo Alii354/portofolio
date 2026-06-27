@@ -582,11 +582,17 @@ nav.scrolled {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top center;
     transition: transform 0.5s ease;
+    /* Anti-blur properties */
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
 }
 
 .project-card:hover .project-img-wrapper img {
-    transform: scale(1.1);
+    transform: scale(1.1) translateZ(0);
 }
 
 .project-overlay {
