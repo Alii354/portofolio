@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener("scroll", reveal);
 
     // ==========================================
-    // Form Submission Prevention (Demo only)
+    // Form Submission via FormSubmit
     // ==========================================
     const form = document.querySelector('.contact-form');
     if (form) {
@@ -134,14 +134,37 @@ document.addEventListener('DOMContentLoaded', () => {
             const btn = form.querySelector('button');
             const originalText = btn.innerHTML;
             
-            btn.innerHTML = '<span>Sent Successfully!</span> <i class="fas fa-check"></i>';
-            btn.style.background = 'linear-gradient(90deg, #10b981, #34d399)';
+            // Show loading state
+            btn.innerHTML = '<span>Sending...</span> <i class="fas fa-spinner fa-spin"></i>';
             
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.style.background = '';
-                form.reset();
-            }, 3000);
+            const formData = new FormData(form);
+            
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    btn.innerHTML = '<span>Sent Successfully!</span> <i class="fas fa-check"></i>';
+                    btn.style.background = 'linear-gradient(90deg, #10b981, #34d399)';
+                    form.reset();
+                } else {
+                    throw new Error('Network response was not ok.');
+                }
+            })
+            .catch(error => {
+                btn.innerHTML = '<span>Error!</span> <i class="fas fa-times"></i>';
+                btn.style.background = 'linear-gradient(90deg, #ef4444, #f87171)';
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = '';
+                }, 3000);
+            });
         });
     }
 });
